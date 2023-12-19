@@ -2,28 +2,16 @@ import React from "react";
 import NotesFirstSection from "./NotesFirstSection";
 import NotesAfterSection from "./NotesAfterSection";
 
-type File = {
-  fileName: string | "";
-  title: string | "";
-  desc: string | "";
-  content: string | "";
-};
-
-type Notes = {
-  folder: string | "";
-  file: File[];
-};
-
 interface Props {
-  notes: Notes[];
-  setNotes: React.Dispatch<React.SetStateAction<Notes[]>>;
+  folder: string[];
+  setFolder: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const NotesPage = ({ notes, setNotes }: Props) => {
+const NotesPage = ({ folder, setFolder }: Props) => {
   return (
     <>
-      {notes[0].folder === "" ? (
-        <NotesFirstSection notes={notes} setNotes={setNotes} />
+      {folder.length === 0 ? (
+        <NotesFirstSection setFolder={setFolder} />
       ) : (
         <NotesAfterSection />
       )}

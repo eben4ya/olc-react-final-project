@@ -2,20 +2,9 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "./components/Sidebar";
 import NotesPage from "./components/NotesPage";
 
-type File = {
-  fileName: string | "";
-  title: string | "";
-  desc: string | "";
-  content: string | "";
-};
-
-interface Props {
-  folder: string | "";
-  file: File[] | [];
-}
-
 const App = () => {
-  const [notes, setNotes] = useState<Props[]>([]);
+  const [folder, setFolder] = useState<string[]>([]);
+  const [file, setFile] = useState<string[]>([]);
 
   // Fungsi untuk menyimpan state ke localStorage
   // const saveToLocalStorage = (value: string[]) => {
@@ -42,8 +31,13 @@ const App = () => {
 
   return (
     <main className="lg:min-h-screen min-h-[100vmax] w-screen flex flex-row items-center justify-center bg-white">
-      <Sidebar notes={notes} setNotes={setNotes} />
-      <NotesPage notes={notes} setNotes={setNotes} />
+      <Sidebar
+        folder={folder}
+        setFolder={setFolder}
+        file={file}
+        setFile={setFile}
+      />
+      <NotesPage folder={folder} setFolder={setFolder} />
     </main>
   );
 };

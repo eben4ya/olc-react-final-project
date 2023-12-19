@@ -4,38 +4,34 @@ import { IoIosArrowUp } from "react-icons/io";
 import { FaTrash } from "react-icons/fa6";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 
-// kurang event titleFile dan dropdownnya
+// bagaimana caranya supaya saat kita klik folder, maka file yang ditampilkan hanya file dari folder tersebut?
+// diakali di sidebarlist, ada fungsi handleFolder, yang berfungsi untuk menyimpan nama folder yang diklik
+// mungkin dengan membuat state fileTemp menjadi array of array of string, dan diakses dengan fileTemp[indexFolder]
+// diakali di sidebarlist, ada state clickFolder, yang berfungsi untuk menampilkan file dari folder yang diklik
 
-type File = {
-  fileName: string | "";
-  title: string | "";
-  desc: string | "";
-  content: string | "";
-};
-
-type Notes = {
-  folder: string | "";
-  file: File[];
-};
+// update : baru nambahin state allFileTemp dan console.log di fungsi handleKeyDownFile (ada bug index ke 0 tidak terbaca)
 
 interface Props {
-  notes: Notes[];
-  setNotes: React.Dispatch<React.SetStateAction<Notes[]>>;
+  folder: string[];
+  setFolder: React.Dispatch<React.SetStateAction<string[]>>;
+  file: string[];
+  setFile: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const SidebarList = ({ notes, setNotes }: Props) => {
+const SidebarList = ({ folder = [], file = [], setFolder, setFile }: Props) => {
   const [folderTemp, setFolderTemp] = useState<string>(""); // Menyimpan nama folder
   const [isFolderTemp, setIsFolderTemp] = useState<boolean>(false); // membuka/ menutup create folder
   const [isFolderTempList, setIsFolderTempList] = useState<boolean>(true); // membuka/ menutup dropdown folder
   const [clickFolder, setClickFolder] = useState<boolean>(true); // membuka/ menutup keseluruhan file dari folder
   const [titleFolderTemp, setTitleFolderTemp] = useState<string>(""); // Menyimpan nama titleFile / folder
+  const [allFileTemp, setAllFileTemp] = useState<string[][]>([[]]); // Menyimpan semua nama File dari folder
   const [fileTemp, setFileTemp] = useState<string>(""); // Menyimpan nama File dari folder
   const [isFileTemp, setIsFileTemp] = useState<boolean>(false); // membuka/ menutup create File
   const [isFileTempList, setIsFileTempList] = useState<boolean>(true); // membuka/ menutup dropdown File
 
   const handleKeyDownFolder = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setNotes([...notes, { folder: folderTemp, file: [] }]);
+      setFolder((prev) => [...prev, folderTemp]);
       setFolderTemp("");
       setIsFolderTemp(false);
     }
@@ -43,24 +39,17 @@ const SidebarList = ({ notes, setNotes }: Props) => {
 
   const handleKeyDownFile = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      notes.filter((item) => {
-        if (item.folder === folderTemp) {
-          item.file.push({
-            fileName: fileTemp,
-            title: "",
-            desc: "",
-            content: "",
-          });
-        }
-      });
+      setFile((prev) => [...prev, fileTemp]);
+      setAllFileTemp((prev) => [...prev, file]);
+      console.log(file);
       setFileTemp("");
       setIsFileTemp(false);
     }
   };
 
   const handleFolder = (index: number) => {
-    notes.filter((item, idx) => {
-      return idx === index ? setTitleFolderTemp(item.folder) : null;
+    folder.filter((item, idx) => {
+      return idx === index ? setTitleFolderTemp(item) : null;
     });
   };
 
@@ -86,8 +75,9 @@ const SidebarList = ({ notes, setNotes }: Props) => {
         </div>
         {isFolderTempList ? (
           <div className="flex flex-col gap-[5px] mt-4">
-            {notes.map((item, index) => (
+            {folder.map((item, index) => (
               <div
+                key={index}
                 onClick={() => {
                   handleFolder(index);
                   setClickFolder(true);
@@ -95,11 +85,8 @@ const SidebarList = ({ notes, setNotes }: Props) => {
                 onDoubleClick={() => setClickFolder(false)}
                 className="flex flex-row justify-between items-center hover:bg-[#F8F8F8] hover:rounded-[8px] hover:font-medium"
               >
-                <p
-                  key={index}
-                  className="p-[10px] text-[19.2px] text-[#242424] font-normal leading-normal tracking-wide"
-                >
-                  {item.folder}
+                <p className="p-[10px] text-[19.2px] text-[#242424] font-normal leading-normal tracking-wide">
+                  {item}
                 </p>
                 <FaTrash className="w-[14px] h-[18px] opacity-50 mr-[10px]" />
               </div>
@@ -134,7 +121,7 @@ const SidebarList = ({ notes, setNotes }: Props) => {
         <div className="flex flex-col mt-[32px] ">
           <div className="flex flex-row justify-between items-center">
             <h6 className="text-[17.067px] text-[#242424] font-medium leading-normal tracking-wider opacity-50">
-              {titleFolderTemp === "" ? notes[0].folder : titleFolderTemp}
+              {titleFolderTemp === "" ? folder[0] : titleFolderTemp}
             </h6>
             <div className="flex w-fit h-fit gap-[10px]">
               <CiCirclePlus
@@ -151,13 +138,13 @@ const SidebarList = ({ notes, setNotes }: Props) => {
           </div>
           {isFileTempList ? (
             <div className="flex flex-col gap-[5px] mt-4">
-              {notes.map((item, index) => (
+              {file.map((item, index) => (
                 <div
                   key={index}
                   className="flex justify-between items-center hover:bg-[#F8F8F8] hover:rounded-[8px] p-[10px]"
                 >
                   <p className="text-[19.2px] text-[#242424] font-normal leading-normal tracking-wide">
-                    {item.file[index].fileName}
+                    {item}
                   </p>
                   <FaTrash className="w-[14px] h-[18px] opacity-50" />
                 </div>
