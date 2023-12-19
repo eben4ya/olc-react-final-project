@@ -6,14 +6,24 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 
 // kurang event titleFile dan dropdownnya
 
+type File = {
+  fileName: string | "";
+  title: string | "";
+  desc: string | "";
+  content: string | "";
+};
+
+type Notes = {
+  folder: string | "";
+  file: File[];
+};
+
 interface Props {
-  folder: string[];
-  setFolder: React.Dispatch<React.SetStateAction<string[]>>;
-  file: string[];
-  setFile: React.Dispatch<React.SetStateAction<string[]>>;
+  notes: Notes[];
+  setNotes: React.Dispatch<React.SetStateAction<Notes[]>>;
 }
 
-const SidebarList = ({ folder = [], file = [], setFolder, setFile }: Props) => {
+const SidebarList = ({ notes, setNotes }: Props) => {
   const [folderTemp, setFolderTemp] = useState<string>(""); // Menyimpan nama folder
   const [isFolderTemp, setIsFolderTemp] = useState<boolean>(false); // membuka/ menutup create folder
   const [isFolderTempList, setIsFolderTempList] = useState<boolean>(true); // membuka/ menutup dropdown folder
@@ -25,7 +35,7 @@ const SidebarList = ({ folder = [], file = [], setFolder, setFile }: Props) => {
 
   const handleKeyDownFolder = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setFolder((prev) => [...prev, folderTemp]);
+      setNotes([...notes, { folder: folderTemp, file: [] }]);
       setFolderTemp("");
       setIsFolderTemp(false);
     }
@@ -33,15 +43,24 @@ const SidebarList = ({ folder = [], file = [], setFolder, setFile }: Props) => {
 
   const handleKeyDownFile = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setFile((prev) => [...prev, fileTemp]);
+      notes.filter((item) => {
+        if (item.folder === folderTemp) {
+          item.file.push({
+            fileName: fileTemp,
+            title: "",
+            desc: "",
+            content: "",
+          });
+        }
+      });
       setFileTemp("");
       setIsFileTemp(false);
     }
   };
 
   const handleFolder = (index: number) => {
-    folder.filter((item, idx) => {
-      return idx === index ? setTitleFolderTemp(item) : null;
+    notes.filter((item, idx) => {
+      return idx === index ? setTitleFolderTemp(item.folder) : null;
     });
   };
 
@@ -67,7 +86,7 @@ const SidebarList = ({ folder = [], file = [], setFolder, setFile }: Props) => {
         </div>
         {isFolderTempList ? (
           <div className="flex flex-col gap-[5px] mt-4">
-            {folder.map((item, index) => (
+            {notes.map((item, index) => (
               <div
                 onClick={() => {
                   handleFolder(index);
@@ -80,7 +99,7 @@ const SidebarList = ({ folder = [], file = [], setFolder, setFile }: Props) => {
                   key={index}
                   className="p-[10px] text-[19.2px] text-[#242424] font-normal leading-normal tracking-wide"
                 >
-                  {item}
+                  {item.folder}
                 </p>
                 <FaTrash className="w-[14px] h-[18px] opacity-50 mr-[10px]" />
               </div>
@@ -115,7 +134,7 @@ const SidebarList = ({ folder = [], file = [], setFolder, setFile }: Props) => {
         <div className="flex flex-col mt-[32px] ">
           <div className="flex flex-row justify-between items-center">
             <h6 className="text-[17.067px] text-[#242424] font-medium leading-normal tracking-wider opacity-50">
-              {titleFolderTemp === "" ? folder[0] : titleFolderTemp}
+              {titleFolderTemp === "" ? notes[0].folder : titleFolderTemp}
             </h6>
             <div className="flex w-fit h-fit gap-[10px]">
               <CiCirclePlus
@@ -132,13 +151,13 @@ const SidebarList = ({ folder = [], file = [], setFolder, setFile }: Props) => {
           </div>
           {isFileTempList ? (
             <div className="flex flex-col gap-[5px] mt-4">
-              {file.map((item, index) => (
+              {notes.map((item, index) => (
                 <div
                   key={index}
                   className="flex justify-between items-center hover:bg-[#F8F8F8] hover:rounded-[8px] p-[10px]"
                 >
                   <p className="text-[19.2px] text-[#242424] font-normal leading-normal tracking-wide">
-                    {item}
+                    {item.file[index].fileName}
                   </p>
                   <FaTrash className="w-[14px] h-[18px] opacity-50" />
                 </div>

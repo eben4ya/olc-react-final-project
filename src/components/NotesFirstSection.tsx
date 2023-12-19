@@ -1,17 +1,30 @@
 import React from "react";
 import { useState } from "react";
 
+type File = {
+  fileName: string | "";
+  title: string | "";
+  desc: string | "";
+  content: string | "";
+};
+
+type Notes = {
+  folder: string | "";
+  file: File[];
+};
+
 interface Props {
-  setFolder: React.Dispatch<React.SetStateAction<string[]>>;
+  notes: Notes[];
+  setNotes: React.Dispatch<React.SetStateAction<Notes[]>>;
 }
 
-const NotesFirstSection = ({ setFolder }: Props) => {
+const NotesFirstSection = ({ notes, setNotes }: Props) => {
   const [folderTemp, setFolderTemp] = useState<string>(""); // Menyimpan inputan user
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // Menangani ketika tombol "Enter" ditekan
     if (e.key === "Enter") {
-      setFolder((prev) => [...prev, folderTemp]);
+      setNotes([...notes, { folder: folderTemp, file: [] }]);
       console.log(folderTemp);
       setFolderTemp("");
     }
