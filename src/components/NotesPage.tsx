@@ -4,13 +4,14 @@ import NotesAfterSection from "./NotesAfterSection";
 
 interface Props {
   folder: string[];
+  setFolder: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const NotesPage = ({ folder }: Props): JSX.Element => {
+const NotesPage = ({ folder, setFolder }: Props) => {
   return (
     <>
       {folder.length === 0 ? (
-        <NotesFirstSection folder={folder} />
+        <NotesFirstSection setFolder={setFolder} />
       ) : (
         <NotesAfterSection />
       )}

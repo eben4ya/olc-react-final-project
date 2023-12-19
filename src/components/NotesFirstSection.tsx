@@ -1,16 +1,21 @@
 import React from "react";
+import { useState } from "react";
 
 interface Props {
-  folder: string[];
+  setFolder: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const NotesFirstSection = ({ folder }: Props): JSX.Element => {
-  //   const handleKeyDown = (e) => {
-  //     // Menangani ketika tombol "Enter" ditekan
-  //     if (e.key === "Enter") {
-  //       setFolder;
-  //     }
-  //   };
+const NotesFirstSection = ({ setFolder }: Props) => {
+  const [folderTemp, setFolderTemp] = useState<string>(""); // Menyimpan inputan user
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Menangani ketika tombol "Enter" ditekan
+    if (e.key === "Enter") {
+      setFolder((prev) => [...prev, folderTemp]);
+      console.log(folderTemp);
+      setFolderTemp("");
+    }
+  };
 
   return (
     <section className="flex flex-col justify-center items-center w-full h-screen">
@@ -23,10 +28,13 @@ const NotesFirstSection = ({ folder }: Props): JSX.Element => {
       <input
         type="text"
         id="firstFolder"
-        value={folder}
+        value={folderTemp}
         placeholder="+  Create your first folder here"
         className="w-[59.375%] h-fit mt-[28px] p-[10px] border-solid border-[1px] border-[#BEBEBE] rounded-[8px] "
-        // onKeyDown={handleKeyDown}
+        onKeyDown={handleKeyDown}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setFolderTemp(e.target.value)
+        }
       />
     </section>
   );
