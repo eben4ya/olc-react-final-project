@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "./components/Sidebar";
 import NotesPage from "./components/NotesPage";
 
-const App: React.FC = () => {
+const App = () => {
   const [folder, setFolder] = useState<string[]>([]);
-  const [titleFile, setTitleFile] = useState<string[]>([]);
+  const [file, setFile] = useState<string[]>([]);
 
   // Fungsi untuk menyimpan state ke localStorage
   // const saveToLocalStorage = (value: string[]) => {
@@ -34,7 +34,8 @@ const App: React.FC = () => {
       <Sidebar
         folder={folder}
         setFolder={setFolder}
-        setTitleFile={setTitleFile}
+        file={file}
+        setFile={setFile}
       />
       <NotesPage folder={folder} setFolder={setFolder} />
     </main>
