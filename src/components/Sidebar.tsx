@@ -4,11 +4,11 @@ import SidebarList from "./SidebarList";
 interface Props {
   folder: string[];
   setFolder: React.Dispatch<React.SetStateAction<string[]>>;
-  file: string[];
-  setFile: React.Dispatch<React.SetStateAction<string[]>>;
+  file: string[][];
+  setFile: React.Dispatch<React.SetStateAction<string[][]>>;
 }
 
-const Sidebar = ({ folder = [], file = [], setFolder, setFile }: Props) => {
+const Sidebar = ({ folder = [], file = [[]], setFolder, setFile }: Props) => {
   return (
     <aside
       className={`fixed top-0 left-0 flex flex-col items-center w-[30%] h-screen ${

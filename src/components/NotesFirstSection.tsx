@@ -18,7 +18,7 @@ const NotesFirstSection = ({ setFolder }: Props) => {
   };
 
   return (
-    <section className="flex flex-col justify-center items-center w-full h-screen">
+    <section className="z-[9999999] flex flex-col justify-center items-center w-full h-screen">
       <label
         htmlFor="firstFolder"
         className="text-[#242424] text-[76.8px] font-normal leading-normal"

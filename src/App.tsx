@@ -4,7 +4,7 @@ import NotesPage from "./components/NotesPage";
 
 const App = () => {
   const [folder, setFolder] = useState<string[]>([]);
-  const [file, setFile] = useState<string[]>([]);
+  const [file, setFile] = useState<string[][]>([[]]);
 
   // Fungsi untuk menyimpan state ke localStorage
   // const saveToLocalStorage = (value: string[]) => {
