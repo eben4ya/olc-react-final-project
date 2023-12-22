@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import NotesPage from "./components/NotesPage";
 
 const App = () => {
   const [folder, setFolder] = useState<string[]>([]);
+  const [folderIndexMain, setFolderIndexMain] = useState<number>(0);
   const [file, setFile] = useState<string[][]>([[]]);
+  const [fileIndexMain, setFileIndexMain] = useState<number>(0);
   const [isForm, setIsForm] = useState<boolean>(false);
   const [titleFolderForm, setTitleFolderForm] = useState<string>("");
   const [titleFileForm, setTitleFileForm] = useState<string>("");
+  const [isNotes, setIsNotes] = useState<boolean>(false); // mengedit notes
 
   // Fungsi untuk menyimpan state ke localStorage
   // const saveToLocalStorage = (value: string[]) => {
@@ -42,6 +45,9 @@ const App = () => {
         setIsForm={setIsForm}
         setTitleFolderForm={setTitleFolderForm}
         setTitleFileForm={setTitleFileForm}
+        setFolderIndexMain={setFolderIndexMain}
+        setFileIndexMain={setFileIndexMain}
+        setIsNotes={setIsNotes}
       />
       <NotesPage
         folder={folder}
@@ -49,6 +55,10 @@ const App = () => {
         isForm={isForm}
         titleFolderForm={titleFolderForm}
         titleFileForm={titleFileForm}
+        folderIndexMain={folderIndexMain}
+        fileIndexMain={fileIndexMain}
+        isNotes={isNotes}
+        setIsNotes={setIsNotes}
       />
     </main>
   );

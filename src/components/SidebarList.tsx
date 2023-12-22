@@ -22,6 +22,9 @@ interface IProps {
   setIsForm: React.Dispatch<React.SetStateAction<boolean>>;
   setTitleFolderForm: React.Dispatch<React.SetStateAction<string>>;
   setTitleFileForm: React.Dispatch<React.SetStateAction<string>>;
+  setFolderIndexMain: React.Dispatch<React.SetStateAction<number>>;
+  setFileIndexMain: React.Dispatch<React.SetStateAction<number>>;
+  setIsNotes: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SidebarList = ({
@@ -32,6 +35,9 @@ const SidebarList = ({
   setIsForm,
   setTitleFolderForm,
   setTitleFileForm,
+  setFolderIndexMain,
+  setFileIndexMain,
+  setIsNotes,
 }: IProps) => {
   const [folderTemp, setFolderTemp] = useState<string>(""); // Menyimpan nama folder
   const [isFolderTemp, setIsFolderTemp] = useState<boolean>(false); // membuka/ menutup create folder
@@ -175,6 +181,7 @@ const SidebarList = ({
       if (idx === index) {
         setTitleFolderTemp(item);
         setFolderIndex(index);
+        setFolderIndexMain(index); // Mempassing index folder yang diklik ke komponen Utama
         setClickedFileTemp(file[index]);
         setTitleFolderForm(item); // ini memperbarui state titleFolderForm dengan nilai folder yang diklik untuk path notes folder / file
         setIsForm(false); // ketika folder diklik, maka form notes akan ditutup
@@ -303,6 +310,7 @@ const SidebarList = ({
                   onClick={() => {
                     setTitleFileForm(item);
                     setIsForm(true);
+                    setFileIndexMain(index); // Mempassing index file yang diklik ke komponen Utama
                   }}
                   key={index}
                   className="flex justify-between items-center hover:bg-[#F8F8F8] hover:rounded-[8px] p-[10px]"
@@ -318,6 +326,7 @@ const SidebarList = ({
                         setEditFile(true);
                         setFileTemp(item);
                         setFileIndex(index);
+                        setIsNotes(false);
                       }}
                     />
                     <FaTrash

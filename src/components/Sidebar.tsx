@@ -9,6 +9,9 @@ interface IProps {
   setIsForm: React.Dispatch<React.SetStateAction<boolean>>;
   setTitleFolderForm: React.Dispatch<React.SetStateAction<string>>;
   setTitleFileForm: React.Dispatch<React.SetStateAction<string>>;
+  setFolderIndexMain: React.Dispatch<React.SetStateAction<number>>;
+  setFileIndexMain: React.Dispatch<React.SetStateAction<number>>;
+  setIsNotes: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Sidebar = ({
@@ -19,6 +22,9 @@ const Sidebar = ({
   setIsForm,
   setTitleFolderForm,
   setTitleFileForm,
+  setFolderIndexMain,
+  setFileIndexMain,
+  setIsNotes,
 }: IProps) => {
   return (
     <aside
@@ -39,6 +45,9 @@ const Sidebar = ({
             setIsForm={setIsForm}
             setTitleFolderForm={setTitleFolderForm}
             setTitleFileForm={setTitleFileForm}
+            setFolderIndexMain={setFolderIndexMain}
+            setFileIndexMain={setFileIndexMain}
+            setIsNotes={setIsNotes}
           />
         )}
       </div>
