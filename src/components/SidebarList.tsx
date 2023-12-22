@@ -38,11 +38,16 @@ const SidebarList = ({
   const [fileTemp, setFileTemp] = useState<string>(""); // Menyimpan nama File dari folder
   const [isFileTemp, setIsFileTemp] = useState<boolean>(false); // membuka/ menutup create File
   const [isFileTempList, setIsFileTempList] = useState<boolean>(true); // membuka/ menutup dropdown File
+  const [editFile, setEditFile] = useState<boolean>(false); // ketika set edit true maka akan mengubah nama file yang diklik
+  const [fileIndex, setFileIndex] = useState<number>(0); // Menyimpan index dari file yang diklik
 
   const handleKeyDownFolder = (
     e: React.KeyboardEvent<HTMLInputElement>
   ): void => {
     if (e.key === "Enter") {
+      if (folderTemp === "") {
+        return alert("Folder name cannot be empty");
+      }
       setFolder((prev) => [...prev, folderTemp]);
       setFolderTemp("");
       setIsFolderTemp(false);
@@ -54,6 +59,9 @@ const SidebarList = ({
     index: number
   ) => {
     if (e.key === "Enter") {
+      if (folderTemp === "") {
+        return alert("Folder name cannot be empty");
+      }
       setFolder((prev) => {
         const updatedFolder = [...prev];
         updatedFolder[index] = folderTemp;
@@ -61,7 +69,7 @@ const SidebarList = ({
         setFolderTemp("");
         setIsFolderTemp(false);
         setEditFolder(false);
-        setFolderIndex(0);
+
         return updatedFolder;
       });
     }
@@ -71,8 +79,11 @@ const SidebarList = ({
     const confirm = window.confirm("Are you sure want to delete this folder?");
     if (confirm) {
       setFolder((prev) => {
-        const updatedFolder = [...prev];
-        updatedFolder.splice(index, 1); // Menghapus 1 elemen pada index yang diberikan
+        let updatedFolder = [...prev]; // harus let karena arraynya akan diubah
+        // const updatedFolder = [...prev]; // kalau pake splice, pake const
+        // updatedFolder.splice(index, 1); // Menghapus 1 elemen pada index yang diberikan
+        updatedFolder = updatedFolder.filter((item, idx) => idx !== index);
+
         return updatedFolder;
       });
     }
@@ -83,6 +94,9 @@ const SidebarList = ({
     index: number
   ) => {
     if (e.key === "Enter") {
+      if (fileTemp === "") {
+        return alert("File name cannot be empty");
+      }
       setFile((prevFile) => {
         // Duplicating the current state array
         const updatedFile = [...prevFile];
@@ -105,6 +119,47 @@ const SidebarList = ({
         setIsFileTemp(false);
 
         return updatedFile; // Returning the updated array as the new state
+      });
+    }
+  };
+
+  const handleEditFile = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    FolderIndex: number,
+    FileIndex: number
+  ) => {
+    if (e.key === "Enter") {
+      if (fileTemp === "") {
+        return alert("File name cannot be empty");
+      }
+      setFile((prevFile) => {
+        const updatedFile = [...prevFile];
+        updatedFile[FolderIndex][FileIndex] = fileTemp;
+        setFileTemp("");
+        setIsFileTemp(false);
+        setEditFile(false);
+
+        return updatedFile;
+      });
+    }
+  };
+
+  const handleDeleteFile = (FolderIndex: number, FileIndex: number) => {
+    const confirm = window.confirm("Are you sure want to delete this file?");
+    if (confirm) {
+      setFile((prevFile) => {
+        // -> yang ini perlu direfresh / dipencet folder yang lain dulu baru bisa kehapus
+        // const updatedFile = [...prevFile];
+        // updatedFile[FolderIndex] = updatedFile[FolderIndex].filter(
+        //   (item, index) => index !== FileIndex
+        // );
+        // return updatedFile;
+        const updatedFile = [...prevFile];
+        updatedFile[FolderIndex] = updatedFile[FolderIndex].filter(
+          (item, index) => index !== FileIndex
+        );
+        setClickedFileTemp(updatedFile[FolderIndex]); // ini memperbarui state clickedFileTemp
+        return updatedFile;
       });
     }
   };
@@ -166,7 +221,11 @@ const SidebarList = ({
                   />
                   <FaTrash
                     className="w-[14px] h-[18px] opacity-50 mr-[10px]"
-                    onClick={() => handleDeleteFolder(index)}
+                    onClick={() => {
+                      setTitleFolderTemp(""); // ini memperbarui state titleFolderTemp dengan nilai folder[0]
+                      setFolderIndex(index);
+                      handleDeleteFolder(index);
+                    }}
                   />
                 </div>
               </div>
@@ -184,6 +243,7 @@ const SidebarList = ({
               onClick={() => {
                 setIsFolderTemp((prev) => !prev);
                 setFolderTemp("");
+                setEditFolder(false);
               }}
               className="w-[25px] h-[25px]"
             />
@@ -234,8 +294,22 @@ const SidebarList = ({
                     {item}
                   </p>
                   <div className="flex w-fit h-fit gap-[16px]">
-                    <FaPen className="w-[15px] h-[15px]" />
-                    <FaTrash className="w-[14px] h-[18px] opacity-50 " />
+                    <FaPen
+                      className="w-[15px] h-[15px]"
+                      onClick={() => {
+                        setIsFileTemp(true);
+                        setEditFile(true);
+                        setFileTemp(item);
+                        setFileIndex(index);
+                      }}
+                    />
+                    <FaTrash
+                      className="w-[14px] h-[18px] opacity-50 "
+                      onClick={() => {
+                        setFileIndex(index);
+                        handleDeleteFile(folderIndex, index);
+                      }}
+                    />
                   </div>
                 </div>
               ))}
@@ -243,12 +317,13 @@ const SidebarList = ({
                 <div className="flex flex-col my-[32px] ">
                   <div className="flex flex-row justify-between items-center">
                     <h6 className="text-[17.067px] text-[#242424] font-medium leading-normal tracking-wider opacity-50">
-                      Create File
+                      {editFile ? "Edit File" : "Create File"}
                     </h6>
                     <IoIosCloseCircleOutline
                       onClick={() => {
                         setIsFileTemp((prev) => !prev);
                         setFileTemp("");
+                        setEditFile(false);
                       }}
                       className="w-[25px] h-[25px]"
                     />
@@ -258,7 +333,11 @@ const SidebarList = ({
                     placeholder="Input file name"
                     className="p-[10px] border-solid border-[1px] border-[#BEBEBE] rounded-[8px] mt-[5px] "
                     value={fileTemp}
-                    onKeyDown={(e) => handleKeyDownFile(e, folderIndex)}
+                    onKeyDown={
+                      editFile
+                        ? (e) => handleEditFile(e, folderIndex, fileIndex)
+                        : (e) => handleKeyDownFile(e, folderIndex)
+                    }
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setFileTemp(e.target.value)
                     }
