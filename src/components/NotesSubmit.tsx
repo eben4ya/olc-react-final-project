@@ -16,7 +16,7 @@ interface IProps {
   fileIndexMain: number;
 }
 
-const NotesAfterSection = ({
+const NotesSubmit = ({
   titleFolderForm,
   titleFileForm,
   notes,
@@ -25,9 +25,7 @@ const NotesAfterSection = ({
 }: // isNotes,
 IProps) => {
   const selectedNotes: INotes | null =
-    notes[folderIndexMain][fileIndexMain] === undefined
-      ? null
-      : notes[folderIndexMain][fileIndexMain];
+    notes[folderIndexMain][fileIndexMain] || null;
   return (
     <section className="absolute top-0 right-0 flex flex-col justify-center items-center w-[70%] h-screen border-l-2">
       {selectedNotes ? (
@@ -64,4 +62,4 @@ IProps) => {
   );
 };
 
-export default NotesAfterSection;
+export default NotesSubmit;
