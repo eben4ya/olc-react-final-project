@@ -14,11 +14,14 @@ import { FaPen } from "react-icons/fa";
 
 // update 2 : bikin state allFileTemp buat menyimpan semua nama file dari semua folder dan setAllFileTemp yang akan mengubah / memperbarui nilai array of arary of string, tapi waktu perulangan index di atas 0, bakal muncul error "updatedFile[index] is not iterable"
 
-interface Props {
+interface IProps {
   folder: string[];
   setFolder: React.Dispatch<React.SetStateAction<string[]>>;
   file: string[][];
   setFile: React.Dispatch<React.SetStateAction<string[][]>>;
+  setIsForm: React.Dispatch<React.SetStateAction<boolean>>;
+  setTitleFolderForm: React.Dispatch<React.SetStateAction<string>>;
+  setTitleFileForm: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const SidebarList = ({
@@ -26,7 +29,10 @@ const SidebarList = ({
   file = [[]],
   setFolder,
   setFile,
-}: Props) => {
+  setIsForm,
+  setTitleFolderForm,
+  setTitleFileForm,
+}: IProps) => {
   const [folderTemp, setFolderTemp] = useState<string>(""); // Menyimpan nama folder
   const [isFolderTemp, setIsFolderTemp] = useState<boolean>(false); // membuka/ menutup create folder
   const [isFolderTempList, setIsFolderTempList] = useState<boolean>(true); // membuka/ menutup dropdown folder
@@ -170,6 +176,8 @@ const SidebarList = ({
         setTitleFolderTemp(item);
         setFolderIndex(index);
         setClickedFileTemp(file[index]);
+        setTitleFolderForm(item); // ini memperbarui state titleFolderForm dengan nilai folder yang diklik untuk path notes folder / file
+        setIsForm(false); // ketika folder diklik, maka form notes akan ditutup
       }
     });
   };
@@ -177,6 +185,7 @@ const SidebarList = ({
   return (
     <>
       <div className="flex flex-col mt-[14px] ">
+        {/* Title Folder */}
         <div className="flex flex-row justify-between items-center">
           <h6 className="text-[17.067px] text-[#242424] font-medium leading-normal tracking-wider opacity-50">
             Folders
@@ -194,6 +203,7 @@ const SidebarList = ({
             />
           </div>
         </div>
+        {/* List Folder */}
         {isFolderTempList ? (
           <div className="flex flex-col gap-[5px] mt-4">
             {folder.map((item, index) => (
@@ -233,6 +243,7 @@ const SidebarList = ({
           </div>
         ) : null}
       </div>
+      {/* Create / Edit Folder */}
       {isFolderTemp ? (
         <div className="flex flex-col mt-[32px] ">
           <div className="flex flex-row justify-between items-center">
@@ -264,6 +275,7 @@ const SidebarList = ({
           />
         </div>
       ) : null}
+      {/* Title Folder for file */}
       {clickFolder ? (
         <div className="flex flex-col mt-[32px] ">
           <div className="flex flex-row justify-between items-center">
@@ -283,10 +295,15 @@ const SidebarList = ({
               />
             </div>
           </div>
+          {/* List File */}
           {isFileTempList ? (
             <div className="flex flex-col gap-[5px] mt-4">
               {clickedFileTemp?.map((item, index) => (
                 <div
+                  onClick={() => {
+                    setTitleFileForm(item);
+                    setIsForm(true);
+                  }}
                   key={index}
                   className="flex justify-between items-center hover:bg-[#F8F8F8] hover:rounded-[8px] p-[10px]"
                 >
@@ -313,6 +330,7 @@ const SidebarList = ({
                   </div>
                 </div>
               ))}
+              {/* Create / Edit File */}
               {isFileTemp ? (
                 <div className="flex flex-col my-[32px] ">
                   <div className="flex flex-row justify-between items-center">

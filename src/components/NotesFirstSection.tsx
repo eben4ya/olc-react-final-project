@@ -1,16 +1,19 @@
 import React from "react";
 import { useState } from "react";
 
-interface Props {
+interface IProps {
   setFolder: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const NotesFirstSection = ({ setFolder }: Props) => {
+const NotesFirstSection = ({ setFolder }: IProps) => {
   const [folderTemp, setFolderTemp] = useState<string>(""); // Menyimpan inputan user
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // Menangani ketika tombol "Enter" ditekan
     if (e.key === "Enter") {
+      if (folderTemp === "") {
+        return alert("Folder name cannot be empty");
+      }
       setFolder((prev) => [...prev, folderTemp]);
       console.log(folderTemp);
       setFolderTemp("");

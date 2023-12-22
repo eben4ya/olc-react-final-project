@@ -5,6 +5,9 @@ import NotesPage from "./components/NotesPage";
 const App = () => {
   const [folder, setFolder] = useState<string[]>([]);
   const [file, setFile] = useState<string[][]>([[]]);
+  const [isForm, setIsForm] = useState<boolean>(false);
+  const [titleFolderForm, setTitleFolderForm] = useState<string>("");
+  const [titleFileForm, setTitleFileForm] = useState<string>("");
 
   // Fungsi untuk menyimpan state ke localStorage
   // const saveToLocalStorage = (value: string[]) => {
@@ -36,8 +39,17 @@ const App = () => {
         setFolder={setFolder}
         file={file}
         setFile={setFile}
+        setIsForm={setIsForm}
+        setTitleFolderForm={setTitleFolderForm}
+        setTitleFileForm={setTitleFileForm}
       />
-      <NotesPage folder={folder} setFolder={setFolder} />
+      <NotesPage
+        folder={folder}
+        setFolder={setFolder}
+        isForm={isForm}
+        titleFolderForm={titleFolderForm}
+        titleFileForm={titleFileForm}
+      />
     </main>
   );
 };

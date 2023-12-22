@@ -1,11 +1,18 @@
 import React from "react";
 import { FaArrowDownLong } from "react-icons/fa6";
 
-const NotesAfterSection = () => {
+interface IProps {
+  titleFolderForm: string;
+  titleFileForm: string;
+}
+
+const NotesAfterSection = ({ titleFolderForm, titleFileForm }: IProps) => {
   return (
     <section className="absolute top-0 right-0 flex flex-col justify-center items-center w-[70%] h-screen border-l-2">
       <form className="flex flex-col w-[95%] h-full font-normal leading-normal">
-        <p className="w-fit h-fit mt-[53px] text-[17.067px]">College / new</p>
+        <p className="w-fit h-fit mt-[53px] text-[17.067px]">
+          {titleFolderForm} / {titleFileForm}
+        </p>
         <input
           className="mt-[29px] text-[42.67px] font-bold tracking-wider"
           type="text"
