@@ -3,6 +3,7 @@ import { CiCirclePlus } from "react-icons/ci";
 import { IoIosArrowUp } from "react-icons/io";
 import { FaTrash } from "react-icons/fa6";
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import { FaPen } from "react-icons/fa";
 
 // bagaimana caranya supaya saat kita klik folder, maka file yang ditampilkan hanya file dari folder tersebut?
 // diakali di sidebarlist, ada fungsi handleFolder, yang berfungsi untuk menyimpan nama folder yang diklik
@@ -32,6 +33,7 @@ const SidebarList = ({
   const [clickFolder, setClickFolder] = useState<boolean>(true); // membuka/ menutup keseluruhan file dari folder (klik 2x untuk menutup)
   const [folderIndex, setFolderIndex] = useState<number>(0); // Menyimpan index dari folder yang diklik
   const [titleFolderTemp, setTitleFolderTemp] = useState<string>(""); // Digunakan agar saat create folder, header file (judul) tidak berubah / mengikuti nama folder yang akan dicreate
+  const [editFolder, setEditFolder] = useState<boolean>(false); // ketika set edit true maka akan mengubah nama folder yang diklik
   const [clickedFileTemp, setClickedFileTemp] = useState<string[]>([]); // Menyimpan nama File dari folder yang diklik
   const [fileTemp, setFileTemp] = useState<string>(""); // Menyimpan nama File dari folder
   const [isFileTemp, setIsFileTemp] = useState<boolean>(false); // membuka/ menutup create File
@@ -44,6 +46,35 @@ const SidebarList = ({
       setFolder((prev) => [...prev, folderTemp]);
       setFolderTemp("");
       setIsFolderTemp(false);
+    }
+  };
+
+  const handleEditFolder = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (e.key === "Enter") {
+      setFolder((prev) => {
+        const updatedFolder = [...prev];
+        updatedFolder[index] = folderTemp;
+        setTitleFolderTemp(folderTemp);
+        setFolderTemp("");
+        setIsFolderTemp(false);
+        setEditFolder(false);
+        setFolderIndex(0);
+        return updatedFolder;
+      });
+    }
+  };
+
+  const handleDeleteFolder = (index: number) => {
+    const confirm = window.confirm("Are you sure want to delete this folder?");
+    if (confirm) {
+      setFolder((prev) => {
+        const updatedFolder = [...prev];
+        updatedFolder.splice(index, 1); // Menghapus 1 elemen pada index yang diberikan
+        return updatedFolder;
+      });
     }
   };
 
@@ -123,7 +154,21 @@ const SidebarList = ({
                 <p className="p-[10px] text-[19.2px] text-[#242424] font-normal leading-normal tracking-wide">
                   {item}
                 </p>
-                <FaTrash className="w-[14px] h-[18px] opacity-50 mr-[10px]" />
+                <div className="flex w-fit h-fit gap-[16px]">
+                  <FaPen
+                    className="w-[15px] h-[15px]"
+                    onClick={() => {
+                      setIsFolderTemp(true);
+                      setEditFolder(true);
+                      setFolderTemp(item);
+                      setFolderIndex(index);
+                    }}
+                  />
+                  <FaTrash
+                    className="w-[14px] h-[18px] opacity-50 mr-[10px]"
+                    onClick={() => handleDeleteFolder(index)}
+                  />
+                </div>
               </div>
             ))}
           </div>
@@ -133,7 +178,7 @@ const SidebarList = ({
         <div className="flex flex-col mt-[32px] ">
           <div className="flex flex-row justify-between items-center">
             <h6 className="text-[17.067px] text-[#242424] font-medium leading-normal tracking-wider opacity-50">
-              Create Folder
+              {editFolder ? "Edit Folder" : "Create Folder"}
             </h6>
             <IoIosCloseCircleOutline
               onClick={() => {
@@ -148,7 +193,11 @@ const SidebarList = ({
             placeholder="Input folder name"
             className="p-[10px] border-solid border-[1px] border-[#BEBEBE] rounded-[8px] mt-[5px] "
             value={folderTemp}
-            onKeyDown={handleKeyDownFolder}
+            onKeyDown={
+              editFolder
+                ? (e) => handleEditFolder(e, folderIndex)
+                : handleKeyDownFolder
+            }
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFolderTemp(e.target.value)
             }
@@ -184,7 +233,10 @@ const SidebarList = ({
                   <p className="text-[19.2px] text-[#242424] font-normal leading-normal tracking-wide">
                     {item}
                   </p>
-                  <FaTrash className="w-[14px] h-[18px] opacity-50" />
+                  <div className="flex w-fit h-fit gap-[16px]">
+                    <FaPen className="w-[15px] h-[15px]" />
+                    <FaTrash className="w-[14px] h-[18px] opacity-50 " />
+                  </div>
                 </div>
               ))}
               {isFileTemp ? (
