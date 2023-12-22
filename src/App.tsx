@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import NotesPage from "./components/NotesPage";
 
@@ -50,7 +50,13 @@ import NotesPage from "./components/NotesPage";
 
 const App = () => {
   const [folder, setFolder] = useState<string[]>([]);
+  const [folderIndexMain, setFolderIndexMain] = useState<number>(0);
   const [file, setFile] = useState<string[][]>([[]]);
+  const [fileIndexMain, setFileIndexMain] = useState<number>(0);
+  const [isForm, setIsForm] = useState<boolean>(false);
+  const [titleFolderForm, setTitleFolderForm] = useState<string>("");
+  const [titleFileForm, setTitleFileForm] = useState<string>("");
+  const [isNotes, setIsNotes] = useState<boolean>(false); // mengedit notes
 
   const fetchFolder = async () => {
     try {
@@ -108,8 +114,24 @@ const App = () => {
         setFolder={setFolder}
         file={file}
         setFile={setFile}
+        setIsForm={setIsForm}
+        setTitleFolderForm={setTitleFolderForm}
+        setTitleFileForm={setTitleFileForm}
+        setFolderIndexMain={setFolderIndexMain}
+        setFileIndexMain={setFileIndexMain}
+        setIsNotes={setIsNotes}
       />
-      <NotesPage folder={folder} setFolder={setFolder} />
+      <NotesPage
+        folder={folder}
+        setFolder={setFolder}
+        isForm={isForm}
+        titleFolderForm={titleFolderForm}
+        titleFileForm={titleFileForm}
+        folderIndexMain={folderIndexMain}
+        fileIndexMain={fileIndexMain}
+        isNotes={isNotes}
+        setIsNotes={setIsNotes}
+      />
     </main>
   );
 };

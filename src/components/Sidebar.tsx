@@ -1,14 +1,31 @@
 import React from "react";
 import SidebarList from "./SidebarList";
 
-interface Props {
+interface IProps {
   folder: string[];
   setFolder: React.Dispatch<React.SetStateAction<string[]>>;
   file: string[][];
   setFile: React.Dispatch<React.SetStateAction<string[][]>>;
+  setIsForm: React.Dispatch<React.SetStateAction<boolean>>;
+  setTitleFolderForm: React.Dispatch<React.SetStateAction<string>>;
+  setTitleFileForm: React.Dispatch<React.SetStateAction<string>>;
+  setFolderIndexMain: React.Dispatch<React.SetStateAction<number>>;
+  setFileIndexMain: React.Dispatch<React.SetStateAction<number>>;
+  setIsNotes: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Sidebar = ({ folder = [], file = [[]], setFolder, setFile }: Props) => {
+const Sidebar = ({
+  folder = [],
+  file = [[]],
+  setFolder,
+  setFile,
+  setIsForm,
+  setTitleFolderForm,
+  setTitleFileForm,
+  setFolderIndexMain,
+  setFileIndexMain,
+  setIsNotes,
+}: IProps) => {
   return (
     <aside
       className={`fixed top-0 left-0 flex flex-col items-center w-[30%] h-screen ${
@@ -25,6 +42,12 @@ const Sidebar = ({ folder = [], file = [[]], setFolder, setFile }: Props) => {
             setFolder={setFolder}
             file={file}
             setFile={setFile}
+            setIsForm={setIsForm}
+            setTitleFolderForm={setTitleFolderForm}
+            setTitleFileForm={setTitleFileForm}
+            setFolderIndexMain={setFolderIndexMain}
+            setFileIndexMain={setFileIndexMain}
+            setIsNotes={setIsNotes}
           />
         )}
       </div>
